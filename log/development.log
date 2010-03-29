@@ -1,0 +1,279 @@
+  [4;36;1mSQL (0.9ms)[0m   [0;1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [4;35;1mSQL (0.4ms)[0m   [0mselect sqlite_version(*)[0m
+  [4;36;1mSQL (164.3ms)[0m   [0;1mCREATE TABLE "schema_migrations" ("version" varchar(255) NOT NULL) [0m
+  [4;35;1mSQL (67.1ms)[0m   [0mCREATE UNIQUE INDEX "unique_schema_migrations" ON "schema_migrations" ("version")[0m
+  [4;36;1mSQL (0.5ms)[0m   [0;1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [4;35;1mSQL (0.3ms)[0m   [0mSELECT version FROM schema_migrations[0m
+Migrating to InitialMigration (20100329165705)
+  [4;36;1mSQL (0.4ms)[0m   [0;1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [4;35;1mSQL (0.5ms)[0m   [0mCREATE TABLE "dictionaries" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar(255), "description" varchar(255), "created_at" datetime, "updated_at" datetime) [0m
+  [4;36;1mSQL (0.2ms)[0m   [0;1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [4;35;1mSQL (0.3ms)[0m   [0mCREATE TABLE "edict_mappings" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "english_word_id" integer, "japanese_word_id" integer, "created_at" datetime, "updated_at" datetime) [0m
+  [4;36;1mSQL (0.3ms)[0m   [0;1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [4;35;1mSQL (0.3ms)[0m   [0mCREATE TABLE "english_words" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "word" varchar(255), "created_at" datetime, "updated_at" datetime) [0m
+  [4;36;1mSQL (0.3ms)[0m   [0;1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [4;35;1mSQL (0.3ms)[0m   [0mCREATE TABLE "heisig_keywords" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "heisig_id" integer, "language_id" integer, "keyword" varchar(255), "created_at" datetime, "updated_at" datetime, "heisig_edition_id" integer) [0m
+  [4;36;1mSQL (0.3ms)[0m   [0;1mCREATE INDEX "index_heisig_keywords_on_heisig_edition_id" ON "heisig_keywords" ("heisig_edition_id")[0m
+  [4;35;1mSQL (0.2ms)[0m   [0mCREATE INDEX "index_heisig_keywords_on_heisig_id" ON "heisig_keywords" ("heisig_id")[0m
+  [4;36;1mSQL (0.2ms)[0m   [0;1mCREATE INDEX "index_heisig_keywords_on_keyword" ON "heisig_keywords" ("keyword")[0m
+  [4;35;1mSQL (0.2ms)[0m   [0mCREATE INDEX "index_heisig_keywords_on_language_id" ON "heisig_keywords" ("language_id")[0m
+  [4;36;1mSQL (0.3ms)[0m   [0;1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [4;35;1mSQL (0.3ms)[0m   [0mCREATE TABLE "heisigs" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "kanji_id" integer, "created_at" datetime, "updated_at" datetime, "heisig_id" integer, "lesson_id" integer) [0m
+  [4;36;1mSQL (0.3ms)[0m   [0;1mCREATE INDEX "index_heisigs_on_heisig_id" ON "heisigs" ("heisig_id")[0m
+  [4;35;1mSQL (0.3ms)[0m   [0mCREATE INDEX "index_heisigs_on_kanji_id" ON "heisigs" ("kanji_id")[0m
+  [4;36;1mSQL (0.3ms)[0m   [0;1mCREATE INDEX "index_heisigs_on_lesson_id" ON "heisigs" ("lesson_id")[0m
+  [4;35;1mSQL (0.5ms)[0m   [0m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [4;36;1mSQL (0.3ms)[0m   [0;1mCREATE TABLE "japanese_words" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "word" varchar(255), "created_at" datetime, "updated_at" datetime) [0m
+  [4;35;1mSQL (0.4ms)[0m   [0m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [4;36;1mSQL (0.4ms)[0m   [0;1mCREATE TABLE "jlpts_kanjis" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "level" varchar(5), "kanji_id" integer, "created_at" datetime, "updated_at" datetime) [0m
+  [4;35;1mSQL (0.5ms)[0m   [0m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [4;36;1mSQL (0.3ms)[0m   [0;1mCREATE TABLE "joyos_kanjis" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "kanji_id" integer, "created_at" datetime, "updated_at" datetime, "level" varchar(5)) [0m
+  [4;35;1mSQL (0.5ms)[0m   [0m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [4;36;1mSQL (0.4ms)[0m   [0;1mCREATE TABLE "kanji_lookups" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "dictionary_id" integer, "kanji_id" integer, "created_at" datetime, "updated_at" datetime, "dictionary_index_value" varchar(255)) [0m
+  [4;35;1mSQL (0.6ms)[0m   [0m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [4;36;1mSQL (0.6ms)[0m   [0;1mCREATE TABLE "kanjis" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "kanji" text, "created_at" datetime, "updated_at" datetime, "stroke_count" integer, "ordinal_id" integer, "frequency" integer, "kanji_tree_edits_count" integer DEFAULT 0, "status" varchar(255) DEFAULT 'U', "occurence_count" integer, "frequency_percentage" decimal(7,5), "rank" integer, "cumulative_frequency" decimal(10,7)) [0m
+  [4;35;1mSQL (0.3ms)[0m   [0mCREATE INDEX "index_kanjis_on_frequency" ON "kanjis" ("frequency")[0m
+  [4;36;1mSQL (0.4ms)[0m   [0;1mCREATE INDEX "index_kanjis_on_frequency_percentage" ON "kanjis" ("frequency_percentage")[0m
+  [4;35;1mSQL (0.4ms)[0m   [0mCREATE INDEX "index_kanjis_on_kanji" ON "kanjis" ("kanji")[0m
+  [4;36;1mSQL (0.3ms)[0m   [0;1mCREATE INDEX "index_kanjis_on_occurence_count" ON "kanjis" ("occurence_count")[0m
+  [4;35;1mSQL (0.2ms)[0m   [0mCREATE INDEX "index_kanjis_on_rank" ON "kanjis" ("rank")[0m
+  [4;36;1mSQL (0.6ms)[0m   [0;1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [4;35;1mSQL (0.4ms)[0m   [0mCREATE TABLE "koreans" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "korean" varchar(255), "created_at" datetime, "updated_at" datetime) [0m
+  [4;36;1mSQL (0.6ms)[0m   [0;1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [4;35;1mSQL (0.3ms)[0m   [0mCREATE TABLE "koreans_kanjis" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "korean_id" integer, "kanji_id" integer, "created_at" datetime, "updated_at" datetime) [0m
+  [4;36;1mSQL (0.6ms)[0m   [0;1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [4;35;1mSQL (0.4ms)[0m   [0mCREATE TABLE "kunyomis" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "kunyomi" varchar(255), "created_at" datetime, "updated_at" datetime) [0m
+  [4;36;1mSQL (0.3ms)[0m   [0;1mCREATE INDEX "index_kunyomis_on_kunyomi" ON "kunyomis" ("kunyomi")[0m
+  [4;35;1mSQL (0.8ms)[0m   [0m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [4;36;1mSQL (0.3ms)[0m   [0;1mCREATE TABLE "kunyomis_kanjis" ("kanji_id" integer, "kunyomi_id" integer, "created_at" datetime, "updated_at" datetime) [0m
+  [4;35;1mSQL (0.3ms)[0m   [0mCREATE INDEX "index_kunyomis_kanjis_on_kanji_id" ON "kunyomis_kanjis" ("kanji_id")[0m
+  [4;36;1mSQL (0.3ms)[0m   [0;1mCREATE INDEX "index_kunyomis_kanjis_on_kunyomi_id" ON "kunyomis_kanjis" ("kunyomi_id")[0m
+  [4;35;1mSQL (0.8ms)[0m   [0m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [4;36;1mSQL (0.4ms)[0m   [0;1mCREATE TABLE "kyuujitais" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "kanji_id" integer, "kyuujitai" varchar(255), "created_at" datetime, "updated_at" datetime) [0m
+  [4;35;1mSQL (0.3ms)[0m   [0mCREATE INDEX "index_kyuujitais_on_kanji_id" ON "kyuujitais" ("kanji_id")[0m
+  [4;36;1mSQL (0.4ms)[0m   [0;1mCREATE INDEX "index_kyuujitais_on_kyuujitai" ON "kyuujitais" ("kyuujitai")[0m
+  [4;35;1mSQL (0.8ms)[0m   [0m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [4;36;1mSQL (0.4ms)[0m   [0;1mCREATE TABLE "languages" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "language" varchar(255), "created_at" datetime, "updated_at" datetime) [0m
+  [4;35;1mSQL (0.9ms)[0m   [0m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [4;36;1mSQL (0.4ms)[0m   [0;1mCREATE TABLE "meanings_kanjis" ("kanji_id" integer, "meaning_id" varchar(255), "created_at" datetime, "updated_at" datetime) [0m
+  [4;35;1mSQL (0.3ms)[0m   [0mCREATE INDEX "index_meanings_kanjis_on_kanji_id" ON "meanings_kanjis" ("kanji_id")[0m
+  [4;36;1mSQL (0.3ms)[0m   [0;1mCREATE INDEX "index_meanings_kanjis_on_meaning_id" ON "meanings_kanjis" ("meaning_id")[0m
+  [4;35;1mSQL (0.8ms)[0m   [0m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [4;36;1mSQL (0.5ms)[0m   [0;1mCREATE TABLE "nanoris" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "nanori" varchar(255), "created_at" datetime, "updated_at" datetime) [0m
+  [4;35;1mSQL (0.4ms)[0m   [0mCREATE INDEX "index_nanoris_on_nanori" ON "nanoris" ("nanori")[0m
+  [4;36;1mSQL (0.9ms)[0m   [0;1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [4;35;1mSQL (0.4ms)[0m   [0mCREATE TABLE "nanoris_kanjis" ("kanji_id" integer, "nanori_id" integer, "created_at" datetime, "updated_at" datetime) [0m
+  [4;36;1mSQL (0.4ms)[0m   [0;1mCREATE INDEX "index_nanoris_kanjis_on_kanji_id" ON "nanoris_kanjis" ("kanji_id")[0m
+  [4;35;1mSQL (0.4ms)[0m   [0mCREATE INDEX "index_nanoris_kanjis_on_nanori_id" ON "nanoris_kanjis" ("nanori_id")[0m
+  [4;36;1mSQL (0.9ms)[0m   [0;1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [4;35;1mSQL (0.4ms)[0m   [0mCREATE TABLE "onyomis" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "onyomi" varchar(255), "created_at" datetime, "updated_at" datetime) [0m
+  [4;36;1mSQL (0.4ms)[0m   [0;1mCREATE INDEX "index_onyomis_on_onyomi" ON "onyomis" ("onyomi")[0m
+  [4;35;1mSQL (1.1ms)[0m   [0m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [4;36;1mSQL (0.4ms)[0m   [0;1mCREATE TABLE "onyomis_kanjis" ("kanji_id" integer, "onyomi_id" integer, "created_at" datetime, "updated_at" datetime) [0m
+  [4;35;1mSQL (0.4ms)[0m   [0mCREATE INDEX "index_onyomis_kanjis_on_kanji_id" ON "onyomis_kanjis" ("kanji_id")[0m
+  [4;36;1mSQL (0.4ms)[0m   [0;1mCREATE INDEX "index_onyomis_kanjis_on_onyomi_id" ON "onyomis_kanjis" ("onyomi_id")[0m
+  [4;35;1mSQL (1.1ms)[0m   [0m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [4;36;1mSQL (0.4ms)[0m   [0;1mCREATE TABLE "pinyins" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "kanji_id" integer, "pinyin" varchar(255), "created_at" datetime, "updated_at" datetime) [0m
+  [4;35;1mSQL (0.3ms)[0m   [0mCREATE INDEX "index_pinyins_on_pinyin" ON "pinyins" ("pinyin")[0m
+  [4;36;1mSQL (1.1ms)[0m   [0;1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [4;35;1mSQL (0.6ms)[0m   [0mCREATE TABLE "pinyins_kanjis" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "kanji_id" integer, "pinyin_id" integer, "created_at" datetime, "updated_at" datetime) [0m
+  [4;36;1mSQL (0.4ms)[0m   [0;1mCREATE INDEX "index_pinyins_kanjis_on_kanji_id" ON "pinyins_kanjis" ("kanji_id")[0m
+  [4;35;1mSQL (0.4ms)[0m   [0mCREATE INDEX "index_pinyins_kanjis_on_pinyin_id_and_kanji_id" ON "pinyins_kanjis" ("pinyin_id", "kanji_id")[0m
+  [4;36;1mSQL (0.4ms)[0m   [0;1mCREATE INDEX "index_pinyins_kanjis_on_pinyin_id" ON "pinyins_kanjis" ("pinyin_id")[0m
+  [4;35;1mSQL (1.1ms)[0m   [0m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [4;36;1mSQL (0.5ms)[0m   [0;1mCREATE TABLE "primitives" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "primitive" varchar(255), "filename" varchar(255), "created_at" datetime, "updated_at" datetime, "equivalent_kanji_id" integer, "stroke_count" integer) [0m
+  [4;35;1mSQL (0.4ms)[0m   [0mCREATE INDEX "index_primitives_on_equivalent_kanji_id" ON "primitives" ("equivalent_kanji_id")[0m
+  [4;36;1mSQL (0.3ms)[0m   [0;1mCREATE INDEX "index_primitives_on_filename" ON "primitives" ("filename")[0m
+  [4;35;1mSQL (0.3ms)[0m   [0mCREATE INDEX "index_primitives_on_primitive" ON "primitives" ("primitive")[0m
+  [4;36;1mSQL (0.4ms)[0m   [0;1mCREATE INDEX "index_primitives_on_stroke_count" ON "primitives" ("stroke_count")[0m
+  [4;35;1mSQL (1.2ms)[0m   [0m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [4;36;1mSQL (0.4ms)[0m   [0;1mCREATE TABLE "primitives_kanjis" ("primitive_id" integer, "kanji_id" integer, "created_at" datetime, "updated_at" datetime) [0m
+  [4;35;1mSQL (0.4ms)[0m   [0mCREATE INDEX "index_primitives_kanjis_on_kanji_id" ON "primitives_kanjis" ("kanji_id")[0m
+  [4;36;1mSQL (0.4ms)[0m   [0;1mCREATE INDEX "index_primitives_kanjis_on_primitive_id" ON "primitives_kanjis" ("primitive_id")[0m
+  [4;35;1mSQL (1.2ms)[0m   [0m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [4;36;1mSQL (0.4ms)[0m   [0;1mCREATE TABLE "skips" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "skip_pattern" varchar(255), "created_at" datetime, "updated_at" datetime) [0m
+  [4;35;1mSQL (0.3ms)[0m   [0mCREATE INDEX "index_skips_on_skip_pattern" ON "skips" ("skip_pattern")[0m
+  [4;36;1mSQL (1.2ms)[0m   [0;1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [4;35;1mSQL (0.4ms)[0m   [0mCREATE TABLE "skips_kanjis" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "skip_id" integer, "kanji_id" integer, "created_at" datetime, "updated_at" datetime) [0m
+  [4;36;1mSQL (0.4ms)[0m   [0;1mCREATE INDEX "index_skips_kanjis_on_kanji_id" ON "skips_kanjis" ("kanji_id")[0m
+  [4;35;1mSQL (0.3ms)[0m   [0mCREATE INDEX "index_skips_kanjis_on_skip_id" ON "skips_kanjis" ("skip_id")[0m
+  [4;36;1mSQL (1.3ms)[0m   [0;1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [4;35;1mSQL (0.4ms)[0m   [0mCREATE TABLE "tanaka_english_words" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "tanaka_sentence_id" integer, "english_word_id" integer, "created_at" datetime, "updated_at" datetime) [0m
+  [4;36;1mSQL (1.3ms)[0m   [0;1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [4;35;1mSQL (0.4ms)[0m   [0mCREATE TABLE "tanaka_japanese_words" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "tanaka_sentence_id" integer, "japanese_word_id" integer, "created_at" datetime, "updated_at" datetime) [0m
+  [4;36;1mSQL (1.3ms)[0m   [0;1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [4;35;1mSQL (0.4ms)[0m   [0mCREATE TABLE "tanaka_sentences" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "english" varchar(255), "japanese" varchar(255), "created_at" datetime, "updated_at" datetime) [0m
+  [4;36;1mSQL (0.2ms)[0m   [0;1mINSERT INTO schema_migrations (version) VALUES ('20100329165705')[0m
+  [4;35;1mSQL (1.3ms)[0m   [0m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [4;36;1mSQL (0.2ms)[0m   [0;1mSELECT version FROM schema_migrations[0m
+  [4;35;1mSQL (1.2ms)[0m   [0m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mPRAGMA index_list("dictionaries")[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mPRAGMA index_list("edict_mappings")[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mPRAGMA index_list("english_words")[0m
+  [4;35;1mSQL (0.3ms)[0m   [0mPRAGMA index_list("heisig_keywords")[0m
+  [4;36;1mSQL (0.2ms)[0m   [0;1mPRAGMA index_info('index_heisig_keywords_on_language_id')[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mPRAGMA index_info('index_heisig_keywords_on_keyword')[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mPRAGMA index_info('index_heisig_keywords_on_heisig_id')[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mPRAGMA index_info('index_heisig_keywords_on_heisig_edition_id')[0m
+  [4;36;1mSQL (0.3ms)[0m   [0;1mPRAGMA index_list("heisigs")[0m
+  [4;35;1mSQL (0.2ms)[0m   [0mPRAGMA index_info('index_heisigs_on_lesson_id')[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mPRAGMA index_info('index_heisigs_on_kanji_id')[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mPRAGMA index_info('index_heisigs_on_heisig_id')[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mPRAGMA index_list("japanese_words")[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mPRAGMA index_list("jlpts_kanjis")[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mPRAGMA index_list("joyos_kanjis")[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mPRAGMA index_list("kanji_lookups")[0m
+  [4;36;1mSQL (0.4ms)[0m   [0;1mPRAGMA index_list("kanjis")[0m
+  [4;35;1mSQL (0.2ms)[0m   [0mPRAGMA index_info('index_kanjis_on_rank')[0m
+  [4;36;1mSQL (0.2ms)[0m   [0;1mPRAGMA index_info('index_kanjis_on_occurence_count')[0m
+  [4;35;1mSQL (0.2ms)[0m   [0mPRAGMA index_info('index_kanjis_on_kanji')[0m
+  [4;36;1mSQL (0.2ms)[0m   [0;1mPRAGMA index_info('index_kanjis_on_frequency_percentage')[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mPRAGMA index_info('index_kanjis_on_frequency')[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mPRAGMA index_list("koreans")[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mPRAGMA index_list("koreans_kanjis")[0m
+  [4;36;1mSQL (0.2ms)[0m   [0;1mPRAGMA index_list("kunyomis")[0m
+  [4;35;1mSQL (0.2ms)[0m   [0mPRAGMA index_info('index_kunyomis_on_kunyomi')[0m
+  [4;36;1mSQL (0.2ms)[0m   [0;1mPRAGMA index_list("kunyomis_kanjis")[0m
+  [4;35;1mSQL (0.2ms)[0m   [0mPRAGMA index_info('index_kunyomis_kanjis_on_kunyomi_id')[0m
+  [4;36;1mSQL (0.2ms)[0m   [0;1mPRAGMA index_info('index_kunyomis_kanjis_on_kanji_id')[0m
+  [4;35;1mSQL (0.2ms)[0m   [0mPRAGMA index_list("kyuujitais")[0m
+  [4;36;1mSQL (0.2ms)[0m   [0;1mPRAGMA index_info('index_kyuujitais_on_kyuujitai')[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mPRAGMA index_info('index_kyuujitais_on_kanji_id')[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mPRAGMA index_list("languages")[0m
+  [4;35;1mSQL (0.2ms)[0m   [0mPRAGMA index_list("meanings_kanjis")[0m
+  [4;36;1mSQL (0.2ms)[0m   [0;1mPRAGMA index_info('index_meanings_kanjis_on_meaning_id')[0m
+  [4;35;1mSQL (0.2ms)[0m   [0mPRAGMA index_info('index_meanings_kanjis_on_kanji_id')[0m
+  [4;36;1mSQL (0.2ms)[0m   [0;1mPRAGMA index_list("nanoris")[0m
+  [4;35;1mSQL (0.2ms)[0m   [0mPRAGMA index_info('index_nanoris_on_nanori')[0m
+  [4;36;1mSQL (0.2ms)[0m   [0;1mPRAGMA index_list("nanoris_kanjis")[0m
+  [4;35;1mSQL (0.2ms)[0m   [0mPRAGMA index_info('index_nanoris_kanjis_on_nanori_id')[0m
+  [4;36;1mSQL (0.2ms)[0m   [0;1mPRAGMA index_info('index_nanoris_kanjis_on_kanji_id')[0m
+  [4;35;1mSQL (0.2ms)[0m   [0mPRAGMA index_list("onyomis")[0m
+  [4;36;1mSQL (0.2ms)[0m   [0;1mPRAGMA index_info('index_onyomis_on_onyomi')[0m
+  [4;35;1mSQL (0.2ms)[0m   [0mPRAGMA index_list("onyomis_kanjis")[0m
+  [4;36;1mSQL (0.2ms)[0m   [0;1mPRAGMA index_info('index_onyomis_kanjis_on_onyomi_id')[0m
+  [4;35;1mSQL (0.2ms)[0m   [0mPRAGMA index_info('index_onyomis_kanjis_on_kanji_id')[0m
+  [4;36;1mSQL (0.2ms)[0m   [0;1mPRAGMA index_list("pinyins")[0m
+  [4;35;1mSQL (0.2ms)[0m   [0mPRAGMA index_info('index_pinyins_on_pinyin')[0m
+  [4;36;1mSQL (0.3ms)[0m   [0;1mPRAGMA index_list("pinyins_kanjis")[0m
+  [4;35;1mSQL (0.2ms)[0m   [0mPRAGMA index_info('index_pinyins_kanjis_on_pinyin_id')[0m
+  [4;36;1mSQL (0.2ms)[0m   [0;1mPRAGMA index_info('index_pinyins_kanjis_on_pinyin_id_and_kanji_id')[0m
+  [4;35;1mSQL (0.2ms)[0m   [0mPRAGMA index_info('index_pinyins_kanjis_on_kanji_id')[0m
+  [4;36;1mSQL (0.4ms)[0m   [0;1mPRAGMA index_list("primitives")[0m
+  [4;35;1mSQL (0.2ms)[0m   [0mPRAGMA index_info('index_primitives_on_stroke_count')[0m
+  [4;36;1mSQL (0.2ms)[0m   [0;1mPRAGMA index_info('index_primitives_on_primitive')[0m
+  [4;35;1mSQL (0.2ms)[0m   [0mPRAGMA index_info('index_primitives_on_filename')[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mPRAGMA index_info('index_primitives_on_equivalent_kanji_id')[0m
+  [4;35;1mSQL (0.2ms)[0m   [0mPRAGMA index_list("primitives_kanjis")[0m
+  [4;36;1mSQL (0.2ms)[0m   [0;1mPRAGMA index_info('index_primitives_kanjis_on_primitive_id')[0m
+  [4;35;1mSQL (0.2ms)[0m   [0mPRAGMA index_info('index_primitives_kanjis_on_kanji_id')[0m
+  [4;36;1mSQL (0.2ms)[0m   [0;1mPRAGMA index_list("skips")[0m
+  [4;35;1mSQL (0.2ms)[0m   [0mPRAGMA index_info('index_skips_on_skip_pattern')[0m
+  [4;36;1mSQL (0.2ms)[0m   [0;1mPRAGMA index_list("skips_kanjis")[0m
+  [4;35;1mSQL (0.2ms)[0m   [0mPRAGMA index_info('index_skips_kanjis_on_skip_id')[0m
+  [4;36;1mSQL (0.2ms)[0m   [0;1mPRAGMA index_info('index_skips_kanjis_on_kanji_id')[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mPRAGMA index_list("tanaka_english_words")[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mPRAGMA index_list("tanaka_japanese_words")[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mPRAGMA index_list("tanaka_sentences")[0m
