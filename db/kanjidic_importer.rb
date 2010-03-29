@@ -2,14 +2,14 @@
 # encoding: utf-8
 
 require 'pp'
-require 'connection'
+require 'db/connection'
 require 'hash_extension'
 
 class KanjidicImporter
 
   attr_accessor :dictionary_lookup, :kanji_lookup, :onyomi_lookup
   attr_reader :lookup_attributes
-  KANJIDIC = "../data/kanjidic"
+  KANJIDIC = "db/kanjidic"
   ENGLISH = 1 
 
 
@@ -31,7 +31,7 @@ class KanjidicImporter
     @onyomi_lookup = table_to_hash_lookup Onyomi, "onyomi"
     @kunyomi_lookup = table_to_hash_lookup Kunyomi, "kunyomi"
     @nanori_lookup = table_to_hash_lookup Nanori, "nanori"
-    @english_word_lookup = table_to_hash_lookup EnglishWord, "english_word"
+    @english_word_lookup = table_to_hash_lookup EnglishWord, "word"
     @kanji_lookup = table_to_hash_lookup Kanji, "kanji"
     @korean_lookup = table_to_hash_lookup Korean, "korean"
     @pinyin_lookup = table_to_hash_lookup Pinyin, "pinyin"
@@ -59,7 +59,7 @@ class KanjidicImporter
 
     dictionary=o.inject({}) {|result, element|
       #only get values that have a key column
-
+ 
       unless element[key_column].nil?
         entry = element[key_column].to_s#.force_encoding("utf-8")
         entry = entry.to_sym if symbol_key
@@ -385,7 +385,7 @@ class KanjidicImporter
   end
 
   def import_kanjidic lines=nil, validate=false, delete=true
-    unless lines.nil?
+    if lines.nil?
       lines = read_lines
     end
     import_reading_lookup_values lines, @lookup_attributes, validate, delete

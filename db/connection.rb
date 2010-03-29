@@ -1,5 +1,5 @@
-DATABASE_CONFIG = 'database.yml'
-MODELS_DIRECTORY = 'models'
+DATABASE_CONFIG = 'config/database.yml'
+MODELS_DIRECTORY = 'app/models'
 
 require 'active_record'
 #https://rails.lighthouseapp.com/projects/8994/tickets/2577-when-using-activerecordassociations-outside-of-rails-a-nameerror-is-thrown

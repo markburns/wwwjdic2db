@@ -1,5 +1,6 @@
 #encoding: utf-8
-require 'kanjidic_importer'
+
+require 'db/kanjidic_importer'
 require 'pp'
 require 'active_support'
 
@@ -17,7 +18,7 @@ describe KanjidicImporter do
       :misclassification]
 
       @importer = KanjidicImporter.new
-      @filename = "../data/kanjidic"
+      @filename = "db/kanjidic"
 
       @lines = File.open @filename, "r" do|f|
         l=f.readlines
