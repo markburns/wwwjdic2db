@@ -8,6 +8,13 @@ developers are used to.
 
 _____________
 
+Note this is only currently working with Ruby 1.9.1
+tested against :
+*ruby 1.9.1p129 (2009-05-12 revision 23412) [i686-linux]
+*ruby 1.9.1 p378
+
+
+_____________
 
 Current Status of this Project
 ==============================
