@@ -1,0 +1,29 @@
+sqlite: &SQLITE
+  adapter: sqlite3
+  encoding: utf8
+  timeout: 5000
+
+
+development:
+  <<: *SQLITE
+  database: db/development.sqlite3
+
+# Warning: The database defined as "test" will be erased and
+# re-generated from your development database when you run "rake".
+# Do not set this db to the same as development or production.
+test: &TEST
+  <<: *SQLITE
+  database: db/test.sqlite3
+
+production:
+  <<: *SQLITE
+  database: db/production.sqlite3
+
+cucumber:
+  <<: *TEST
+
+selenium:
+  adapter: sqlite3
+  database: db/selenium.sqlite3
+  encoding: utf8
+  timeout: 5000
