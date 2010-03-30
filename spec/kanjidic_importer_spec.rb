@@ -7,17 +7,8 @@ require 'active_support'
 describe KanjidicImporter do
 
   before(:all) { 
-    @indexes=[ :radical, :classical_radical, :halpern, :nelson,
-      :new_nelson, :japanese_for_busy_people, :kanji_way , 
-      :japanese_flashcards , :kodansha , :hensall , :kanji_in_context ,
-      :kanji_learners_dictionary , :french_heisig , :o_neill , :de_roo ,
-      :sakade , :tuttle_flash_card , :tuttle_dictionary ,
-      :tuttle_kanji_and_kana , :unicode, :four_corner ,
-      :heisig, :morohashi_index , :morohashi_volume_page ,
-      :henshall , :gakken , :japanese_names , :cross_reference ,
-      :misclassification]
-
       @importer = KanjidicImporter.new
+      @indexes = @importer.index_names
       @filename = "db/kanjidic"
 
       @lines = File.open @filename, "r" do|f|
@@ -38,101 +29,101 @@ describe KanjidicImporter do
       @line << "ハン めし T1 い いい いり え {meal} {boiled rice}" 
 
   }
-  if false
-    it ("returns a regexp for a data type")  {
-      r= @importer.regexp :katakana 
-      r.should == (/\b[ア-ン]+[ア-ン.]*\b/)
+  it ("returns a regexp for a data type")  {
+    r= @importer.regexp :katakana 
+    r.should == (/\b[ア-ン]+[ア-ン.]*\b/)
 
-      r= @importer.regexp :hiragana 
-      r.should == (/\b[あ-ん]+[あ-ん.]*\b/)
-    }
-
-    it "gets relevant data from a line" do
-      kanji = @importer.get_element :kanji, @line
-      kanji.should == "飯"
-
-      onyomis = @importer.get_element :onyomi, @line
-      onyomis.length.should == 1
-
-      kunyomis = @importer.get_element :kunyomi, @line
-      kunyomis.length.should == 1
-
-      nanoris = @importer.get_element :nanori, @line
-      nanoris.length.should == 4
-      nanoris.should == %w[い いい いり え]
-
-      meanings = @importer.get_element :meaning, @line
-      meanings.length.should == 2
-      meanings.should == ["meal", "boiled rice"]
-
-      korean = @importer.get_element :korean, @line
-      korean.length.should == 1
-      korean.should == ["ban"]
-
-      pinyin = @importer.get_element :pinyin, @line
-      pinyin.length.should == 1
-      pinyin.should == ["fan4"]
-
-    end
-
-    #certain text values need adding to tables first so that the relationships
-    #can be built after the ids are created and saved
-    it "gets all unique values from an array of lines" do
-      #covers kanji, readings, meanings,classical radicals, radicals, 
-      kunyomis = @importer.get_unique_values :kunyomi, @lines
-      kunyomis.class.should be Array
-      onyomis = @importer.get_unique_values :onyomi
-      onyomis.class.should be Array
-      onyomis.length.should be >= 415 
-
-      hash = @importer.get_unique_values [:kunyomi, :onyomi]
-      hash.class.should be Hash
-      hash[:kunyomi].should_not be nil
-
-      meanings = @importer.get_unique_values [:meaning]
-      meanings.class.should be Hash
-      meanings[:meaning].length.should be > 8020 
-      hash = @importer.get_unique_values [:kunyomi, :onyomi]
-
-      hash[:kunyomi].length.should be > 900
-      hash[:onyomi].length.should be > 400
-
-
-      all_values = @importer.lookup_attributes
-
-      hash = @importer.get_unique_values all_values
-      hash.class.should == Hash
-      hash.length.should == all_values.length
-      hash.keys.should == all_values
-      hash.each_pair do |key,value|
-        puts "#{key}: #{value.length} items"
-      end
-    end
-
-    it "imports reading lookup values" do
-      @importer.import_reading_lookup_values @lines
-      Onyomi.count.should be 415
-      Meaning.count.should be 8486
-      Nanori.count.should be 1023
-      Skip.count.should be 583
-      Korean.count.should be 472
-      Pinyin.count.should be 1139
-      Kunyomi.count.should be 4382
-    end
-  end
-  it( "returns a regexp for an index type" ){
-    @indexes.each do |index| 
-    r = @importer.regexp index
-    r.should_not be nil
-    end
-
+    r= @importer.regexp :hiragana 
+    r.should == (/\b[あ-ん]+[あ-ん.]*\b/)
   }
 
+
+  it "gets relevant data from a line" do
+    kanji = @importer.get_element :kanji, @line
+    kanji.should == "飯"
+
+    onyomis = @importer.get_element :onyomi, @line
+    onyomis.length.should == 1
+
+    kunyomis = @importer.get_element :kunyomi, @line
+    kunyomis.length.should == 1
+
+    nanoris = @importer.get_element :nanori, @line
+    nanoris.length.should == 4
+    nanoris.should == %w[い いい いり え]
+
+    meanings = @importer.get_element :meaning, @line
+    meanings.length.should == 2
+    meanings.should == ["meal", "boiled rice"]
+
+    korean = @importer.get_element :korean, @line
+    korean.length.should == 1
+    korean.should == ["ban"]
+
+    pinyin = @importer.get_element :pinyin, @line
+    pinyin.length.should == 1
+    pinyin.should == ["fan4"]
+
+  end
+
+  #certain text values need adding to tables first so that the relationships
+  #can be built after the ids are created and saved
+  it "gets all unique values from an array of lines" do
+    #covers kanji, readings, meanings,classical radicals, radicals, 
+    kunyomis = @importer.get_unique_values :kunyomi, @lines
+    kunyomis.class.should be Array
+    onyomis = @importer.get_unique_values :onyomi
+    onyomis.class.should be Array
+    onyomis.length.should be >= 415 
+
+    hash = @importer.get_unique_values [:kunyomi, :onyomi]
+    hash.class.should be Hash
+    hash[:kunyomi].should_not be nil
+
+    meanings = @importer.get_unique_values [:meaning]
+    meanings.class.should be Hash
+    meanings[:meaning].length.should be > 8020 
+    hash = @importer.get_unique_values [:kunyomi, :onyomi]
+
+    hash[:kunyomi].length.should be > 900
+    hash[:onyomi].length.should be > 400
+
+
+    all_values = @importer.lookup_attributes
+
+    hash = @importer.get_unique_values all_values
+    hash.class.should == Hash
+    hash.length.should == all_values.length
+    hash.keys.should == all_values
+    hash.each_pair do |key,value|
+      puts "#{key}: #{value.length} items"
+    end
+  end
+
+  it "imports reading lookup values" do
+    @importer.import_reading_lookup_values @lines
+    Onyomi.count.should be 415
+    Meaning.count.should be 8486
+    Nanori.count.should be 1023
+    Skip.count.should be 583
+    Korean.count.should be 472
+    Pinyin.count.should be 1139
+    Kunyomi.count.should be 4382
+  end
 
   it("generates a hash lookup for a table") {
     hash = @importer.table_to_hash_lookup(Kunyomi, "kunyomi")
     l = hash.length
     l.should == (4382)
+  }
+
+
+  it( "returns a regexp for an index type" ){
+    @indexes.each do |index| 
+      r = @importer.regexp index
+      r.should_not be nil
+    end
+
   }
 
   it "gets a dictionary  index" do

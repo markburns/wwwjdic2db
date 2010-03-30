@@ -8,13 +8,13 @@ require 'hash_extension'
 class KanjidicImporter
 
   attr_accessor :dictionary_lookup, :kanji_lookup, :onyomi_lookup
-  attr_reader :lookup_attributes
+  attr_reader :lookup_attributes, :index_names
   KANJIDIC = "db/kanjidic"
   ENGLISH = 1 
 
 
   def initialize
-    @lookup_attributes = [:kunyomi, :onyomi, :english_word, :nanori,  :skip, :korean, :pinyin]
+    @lookup_attributes = [:kunyomi, :onyomi, :meaning, :nanori,  :skip, :korean, :pinyin]
     @index_names=[ :radical, :classical_radical, :halpern, :nelson,
       :new_nelson, :japanese_for_busy_people, :kanji_way , 
       :japanese_flashcards , :kodansha , :hensall , :kanji_in_context ,
@@ -31,7 +31,7 @@ class KanjidicImporter
     @onyomi_lookup = table_to_hash_lookup Onyomi, "onyomi"
     @kunyomi_lookup = table_to_hash_lookup Kunyomi, "kunyomi"
     @nanori_lookup = table_to_hash_lookup Nanori, "nanori"
-    @english_word_lookup = table_to_hash_lookup EnglishWord, "word"
+    @meaning_lookup = table_to_hash_lookup Meaning, "meaning"
     @kanji_lookup = table_to_hash_lookup Kanji, "kanji"
     @korean_lookup = table_to_hash_lookup Korean, "korean"
     @pinyin_lookup = table_to_hash_lookup Pinyin, "pinyin"
@@ -81,6 +81,8 @@ class KanjidicImporter
   #populated the necessary tables with unique values, and
   #then when going over each line the ids for the relationships
   #are known 
+  #An assumption is made that the attribute name is the same as the model name
+  #
   #validate -- run ActiveRecord validation
   #delete -- delete all the records in each table first (to perfrom a complete
   #datbase rebuild)
@@ -89,6 +91,7 @@ class KanjidicImporter
       #returns a hash of arrays of values
       unique_values = get_unique_values types, lines
       unique_values.each_pair do |column,values|
+        #assume model name same as attribute name
         table = eval(column.to_s.capitalize)
         table.delete_all if delete_all
         #make assumption name that e.g. kunyomi is column
@@ -182,7 +185,7 @@ class KanjidicImporter
       #puts "processing #{type}"
       return yomi.scan(regexp(type)).flatten
 
-    when :yomi, :english_word, :kana, :korean, :pinyin, :skip
+    when :yomi, :meaning, :kana, :korean, :pinyin, :skip
       return line.scan(regexp(type)).flatten
 
     when :bushu, :radical, :historical_radical, :classical_radical, :halpern, :nelson,
@@ -212,7 +215,7 @@ class KanjidicImporter
       /\b[ア-ンあ-ん]+[ア-ンあ-ん.]*\b/
     when :nanori_divider
       /\sT1\s/
-    when :english_word
+    when :meaning
       /\{([^\}]+)\}/ #anything between {}
     when :korean
       /\sW(\w+)\s/
@@ -415,7 +418,7 @@ class KanjidicImporter
       unless line_number == 1
         kanji = line[0].to_s
         kanji_id = @kanji_lookup[kanji]
-        #for each of nanori, onyomi, english_words, pinyin etc
+        #for each of nanori, onyomi, meanings, pinyin etc
         @lookup_attributes.each do |column|    
           #get each of the multiple value attributes and append them to an array 
           #to import at the end
