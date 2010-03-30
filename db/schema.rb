@@ -153,6 +153,16 @@ ActiveRecord::Schema.define(:version => 20100329165705) do
     t.datetime "updated_at"
   end
 
+  create_table "meanings", :force => true do |t|
+    t.integer  "language_id"
+    t.text     "meaning"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "meanings", ["language_id"], :name => "index_meanings_kanjis_on_language_id"
+  add_index "meanings", ["meaning"], :name => "index_meanings_kanjis_on_meaning"
+
   create_table "meanings_kanjis", :id => false, :force => true do |t|
     t.integer  "kanji_id"
     t.string   "meaning_id"

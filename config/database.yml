@@ -22,8 +22,3 @@ production:
 cucumber:
   <<: *TEST
 
-selenium:
-  adapter: sqlite3
-  database: db/selenium.sqlite3
-  encoding: utf8
-  timeout: 5000
