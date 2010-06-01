@@ -1,8 +1,8 @@
 #encoding: utf-8
-
 require 'db/kanjidic_importer'
 require 'pp'
-require 'active_support'
+require 'ruby-debug'
+Debugger.start
 
 describe KanjidicImporter do
 
@@ -40,6 +40,7 @@ describe KanjidicImporter do
 
   it "gets relevant data from a line" do
     kanji = @importer.get_element :kanji, @line
+    puts kanji
     kanji.should == "飯"
 
     onyomis = @importer.get_element :onyomi, @line
@@ -94,7 +95,10 @@ describe KanjidicImporter do
     hash = @importer.get_unique_values all_values
     hash.class.should == Hash
     hash.length.should == all_values.length
-    hash.keys.should == all_values
+    keys = hash.keys
+    keys.each do |key|
+      all_values.should include key
+    end
     hash.each_pair do |key,value|
       puts "#{key}: #{value.length} items"
     end
@@ -102,6 +106,7 @@ describe KanjidicImporter do
 
   it "imports reading lookup values" do
     @importer.import_reading_lookup_values @lines
+    Kanji.count.should be 6356
     Onyomi.count.should be 415
     Meaning.count.should be 8486
     Nanori.count.should be 1023

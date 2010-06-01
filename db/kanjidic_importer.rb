@@ -14,7 +14,7 @@ class KanjidicImporter
 
 
   def initialize
-    @lookup_attributes = [:kunyomi, :onyomi, :meaning, :nanori,  :skip, :korean, :pinyin]
+    @lookup_attributes = [:kunyomi, :onyomi, :meaning, :nanori,  :skip, :korean, :pinyin, :kanji]
     @index_names=[ :radical, :classical_radical, :halpern, :nelson,
       :new_nelson, :japanese_for_busy_people, :kanji_way , 
       :japanese_flashcards , :kodansha , :hensall , :kanji_in_context ,
@@ -46,10 +46,11 @@ class KanjidicImporter
   #unpredictable
   #key_column is the attribute in the table to use as the hash key
   #value_column defaults to id, and is the attribute to use as the hash value
-  #string_key? is used to determine if the output hash has a string or symbol lookup
+  #symbol_key is used to determine if the output hash has a string or symbol lookup
   def table_to_hash_lookup table, key_column, symbol_key = false, value_column="id"
     key_column = key_column.to_s #allows for accepting symbols or strings
     value_column = value_column.to_s
+
     o=table.find_as_hashes(:all, :select => "#{key_column}, #{value_column}")
     #returns array of form
     # [{"id"=>"1", "column"=>"value"},{"id" => "2", "column" => "value2"}....]
@@ -146,7 +147,7 @@ class KanjidicImporter
     if types.is_a? Symbol
       types = [types]
     end
-    kanji_id = @kanji_lookup[line[0]]
+    kanji_id = @kanji_lookup[get_element(:kanji, line)]
     out=[]
     types.each do |type|
       dictionary_index_value = get_element(type, line)
@@ -168,7 +169,7 @@ class KanjidicImporter
   def get_element type, line
     case type
     when :kanji
-      return line[0]
+      return line.split(" ")[0]
     when :nanori, :onyomi, :kunyomi
       nanori_match = regexp(:nanori_divider).match line
       #if there is a nanori section then create the
@@ -395,7 +396,6 @@ class KanjidicImporter
     readings, indexes = parse_kanjidic lines
     import_indexes indexes, validate, delete
     import_relationships readings, validate, delete
-
   end
 
   #returns all the relationships and indexes in the lines
