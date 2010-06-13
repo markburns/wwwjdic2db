@@ -16,7 +16,7 @@ describe KanjidicImporter do
         arr=[]
         #skip the first line
         l.each do |line|
-          arr << line unless line[0]=="#"
+          arr << line unless line[0..0]=="#"
         end
         arr 
       end
@@ -29,6 +29,7 @@ describe KanjidicImporter do
       @line << "ハン めし T1 い いい いり え {meal} {boiled rice}" 
 
   }
+
   it ("returns a regexp for a data type")  {
     r= @importer.regexp :katakana 
     r.should == (/\b[ア-ン]+[ア-ン.]*\b/)
@@ -89,7 +90,6 @@ describe KanjidicImporter do
     hash[:kunyomi].length.should be > 900
     hash[:onyomi].length.should be > 400
 
-
     all_values = @importer.lookup_attributes
 
     hash = @importer.get_unique_values all_values
@@ -106,21 +106,29 @@ describe KanjidicImporter do
 
   it "imports reading lookup values" do
     @importer.import_reading_lookup_values @lines
-    Kanji.count.should be 6356
-    Onyomi.count.should be 415
-    Meaning.count.should be 8486
-    Nanori.count.should be 1023
-    Skip.count.should be 583
-    Korean.count.should be 472
-    Pinyin.count.should be 1139
-    Kunyomi.count.should be 4382
+    Kanji.count.should be_close 6356, 10
+    Onyomi.count.should be_close 415, 5
+    Meaning.count.should be_close  8486, 20
+    Nanori.count.should be_close  1023, 10
+    Skip.count.should be_close  583, 5
+    Korean.count.should be_close  472, 5
+    Pinyin.count.should be_close  1139, 10
+    Kunyomi.count.should be_close  4382, 30
   end
 
   it("generates a hash lookup for a table") {
     hash = @importer.table_to_hash_lookup(Kunyomi, "kunyomi")
     l = hash.length
-    l.should == (4382)
+    l.should be_close 4382,10
   }
+
+  it("generates a hash lookup for the dictionaries table") {
+    hash = @importer.table_to_hash_lookup(Dictionary, "name", use_symbol=true)
+    l = hash.length
+    puts l
+    l.should be_close 30,3
+  }
+
 
 
   it( "returns a regexp for an index type" ){
@@ -131,22 +139,34 @@ describe KanjidicImporter do
 
   }
 
-  it "gets a dictionary  index" do
+  #returns the dictioanry id and lookup value from
+  #an input of dictionary indices and 
+  def id_and_value input, which
+    input[which][1..2]
+  end
+  
+  it "gets a radical index" do
     indexes = @importer.get_dictionary_index :radical, @line
-    indexes.should == [[2307,1,"184"]]
-    indexes = @importer.get_dictionary_index [:heisig], @line
-    indexes.should == [[2307,22,"1473"]]
+    id_and_value(indexes,0).should == [1,"184"]
+  end
 
+  it "gets a heisig index" do
+    indexes = @importer.get_dictionary_index [:heisig], @line
+    id_and_value(indexes,0).should == [22,"1473"]
+  end
+
+  it "gets a radical and heisig index" do
     indexes = @importer.get_dictionary_index [:radical, :heisig], @line
-    indexes.should == [[2307,1,"184"],[2307,22,"1473"]]
+    [id_and_value(indexes,0),id_and_value(indexes,1)].should == 
+      [[1,"184"],[22,"1473"]]
   end
 
   it "appends to an array of dictionary indexes" do 
     indexes = @importer.get_dictionary_index [:radical, :heisig], @line
-    indexes.should == [[2307,1,"184"],[2307,22,"1473"]]
     indexes = @importer.get_dictionary_index [:nelson], @line, indexes
     indexes.length.should == 3
   end
+
   it "imports multiple indexes" do
 
     KanjiLookup.delete_all
@@ -163,6 +183,7 @@ describe KanjidicImporter do
     readings.length.should be @importer.lookup_attributes.length
     indexes.length.should be > 15000
   end
+
   it "imports kanjidic" do
     validate = false
     delete_all = true

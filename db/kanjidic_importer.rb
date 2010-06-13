@@ -14,7 +14,7 @@ class KanjidicImporter
 
 
   def initialize
-    @lookup_attributes = [:kunyomi, :onyomi, :meaning, :nanori,  :skip, :korean, :pinyin, :kanji]
+    @lookup_attributes = [:kunyomi, :onyomi, :meaning, :nanori,  :skip, :korean, :pinyin]
     @index_names=[ :radical, :classical_radical, :halpern, :nelson,
       :new_nelson, :japanese_for_busy_people, :kanji_way , 
       :japanese_flashcards , :kodansha , :hensall , :kanji_in_context ,
@@ -24,7 +24,6 @@ class KanjidicImporter
       :heisig, :morohashi_index , :morohashi_volume_page ,
       :henshall , :gakken , :japanese_names , :cross_reference ,
       :misclassification]
-    generate_lookups()
   end
 
   def generate_lookups
@@ -100,10 +99,15 @@ class KanjidicImporter
         if column == :skip
           column = :skip_pattern
         end
-        #convert values array to 2D array for ar-extensions import
-        values2d =[]
-        values.each do |v|values2d<<[v];end
-        table.import [column],values2d, :validate=>validate
+        if values.any?
+          #convert values array to 2D array for ar-extensions import
+          values2d =[]
+          values.each do |v|values2d<<[v];end
+          puts "importing #{table}"
+          table.import [column],values2d, :validate=>validate
+          puts "imported #{table}"
+        end
+
       end
     end
 
@@ -127,11 +131,15 @@ class KanjidicImporter
   def import_relationships relationships, validate=false, delete_all=true
     ActiveRecord::Base.transaction do |transaction|
       relationships.each_pair do |column, values|
-        table = eval(column.to_s.capitalize+"sKanji")
-        relation_id = (column.to_s + "_id").to_sym
-        columns = [:kanji_id, relation_id]
-        table.delete_all if delete_all
-        table.import columns, values,  :validate => validate 
+        if values.any?
+          table = eval(column.to_s.capitalize+"sKanji")
+          relation_id = (column.to_s + "_id").to_sym
+          columns = [:kanji_id, relation_id]
+          table.delete_all if delete_all
+          puts "Importing #{table}"
+          table.import columns, values,  :validate => validate 
+          puts "Imported #{table}"
+        end
       end
     end
   end
@@ -290,7 +298,7 @@ class KanjidicImporter
     when :henshall #"A Guide To Remembering Japanese Characters";
       /\s(E[^\s]+)\s/
     when :gakken #"Gakken Kanji Dictionary";
-      /\s(G[^\s]+)\s/
+      /\s(K[^\s]+)\s/
     when :japanese_names #"Japanese Names, by P.G. O'Neill";
       /\s(O[^\s]+)\s/
     when :cross_reference #"Cross Reference Code";
@@ -385,17 +393,16 @@ class KanjidicImporter
   end
 
   def read_lines filename=KANJIDIC
-    lines = File.open filename, "r" do |f|; f.readlines;end
+    lines = File.read filename
   end
 
   def import_kanjidic lines=nil, validate=false, delete=true
-    if lines.nil?
-      lines = read_lines
-    end
-    import_reading_lookup_values lines, @lookup_attributes, validate, delete
+    lines = read_lines if lines.nil?
+    import_reading_lookup_values(lines, @lookup_attributes, validate, delete)
     readings, indexes = parse_kanjidic lines
     import_indexes indexes, validate, delete
-    import_relationships readings, validate, delete
+    
+    import_relationships readings, validate, delete if readings.any?
   end
 
   #returns all the relationships and indexes in the lines
@@ -416,7 +423,7 @@ class KanjidicImporter
 
     lines.each do |line|
       unless line_number == 1
-        kanji = line[0].to_s
+        kanji = get_element(:kanji,line)
         kanji_id = @kanji_lookup[kanji]
         #for each of nanori, onyomi, meanings, pinyin etc
         @lookup_attributes.each do |column|    

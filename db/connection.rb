@@ -15,7 +15,6 @@ ActiveRecord::Base.establish_connection(dbconfig)
 files = Dir.glob MODELS_DIRECTORY + "/*.rb"
 
 files.each do |f|
-  puts "requiring #{f}"
   require f  
 	
 end
